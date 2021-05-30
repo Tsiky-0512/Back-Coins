@@ -12,7 +12,7 @@ import IDea.backend.entities.Entreprise;
 import IDea.backend.entities.Offre;
 import IDea.backend.entities.Participation;
 
-public class Function {
+public class Function	 {
 
 	public List<Double> statistic(double vola, double taux,String partition){
 		if(partition.compareTo("annual")==0) {
@@ -60,13 +60,13 @@ public class Function {
 		Connection c = Connexion.Connection();
 		Offre[] off = Access.query(c,Offre.class,sql);
 		for(int i=0 ; i<off.length ; i++) {
-			sql = "Select id_Investisseur, sum(part_insert+part_last) as part_last from participation where id_Offre = "+off[i].getId_Offre() + " group by id_Investisseur";
+			sql = "Select id_Investisseur, sum(part) as part from participation where id_Offre = "+off[i].getId_Offre() + " group by id_Investisseur";
 			Participation[] ret = Access.query(c,Participation.class,sql);
 			for(int j=0 ; j<ret.length ; j++) {
 				Integer[] intTemp = new Integer[2];
 				intTemp[0] = ret[i].getId_Investisseur();
 				intTemp[1] = off[i].getId_Offre();
-				double temp = ret[i].getPart_last();
+				double temp = ret[i].getPart();
 				map.put(intTemp,temp);  
 			}
 		}

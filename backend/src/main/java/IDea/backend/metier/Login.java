@@ -49,10 +49,10 @@ public class Login {
 		String[] authHeaderArr = authHeader.split("Bearer");
 		if(authHeaderArr.length>1 && authHeaderArr[1]!=null) {
 			String token = authHeaderArr[1];
+			System.out.println(token);
 			try {
 				Claims claims = Jwts.parser().setSigningKey(token_secret)
 						.parseClaimsJws(token).getBody();
-				request.setAttribute("id", Integer.parseInt(claims.get("id").toString()));
 			} catch (Exception e) {
 				throw new Exception("Token invalid/expired");
 			}
@@ -72,13 +72,15 @@ public class Login {
 		try {
 			conn = Connexion.Connection();
 			conn.setAutoCommit(false);
-			T[] result = (T[]) Access.query(conn,temp, "SELECT * FROM "+temp.getSimpleName()+" where nom_"+temp.getSimpleName()+"="+nom);
+			String req = "SELECT * FROM "+temp.getSimpleName()+" where nom_"+temp.getSimpleName()+"='"+nom+"'";
+				T[] result = (T[]) Access.query(conn,temp, req);
+			System.out.println(req);
 			conn.commit();
 			return result[0];
 		} catch (Exception e) {
 			e.printStackTrace();
 			conn.rollback();
-			throw new Exception(e.getMessage());
+			throw new Exception("utilisateur non introuvable");
 		}finally {
 			conn.close();
 		}

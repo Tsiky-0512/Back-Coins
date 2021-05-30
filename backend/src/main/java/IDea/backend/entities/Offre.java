@@ -1,6 +1,8 @@
 package IDea.backend.entities;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import IDea.backend.database.Access;
@@ -57,6 +59,39 @@ public class Offre {
 			conn.close();
 		}
 		
+	}
+	
+	public Offre getLastIdOffre(Connection conn) throws Exception {
+		String sql = "SELECT MAX(id_Offre) AS id_Offre FROM Offre";
+		try {
+			conn = Connexion.Connection();
+			conn.setAutoCommit(false);
+			Offre[] ret = Access.query(conn,Offre.class,sql);
+			conn.commit();
+			return ret[0];
+		} catch (Exception e) {
+			e.printStackTrace();
+			conn.rollback();
+			throw new Exception(e.getMessage());
+		}
+	}
+	
+	public int getSommeOffre(Connection conn,long id_entreprise) throws Exception {
+		String sql = "SELECT COUNT(ID_OFFRE) AS id_Offre FROM Offre where id_entreprise="+id_entreprise;
+		Double resultat = 0.0;
+		PreparedStatement st = null;
+		int count_offre = 0
+;		try {
+            st = conn.prepareStatement(sql);
+            ResultSet result = st.executeQuery();
+            while(result.next())  count_offre = result.getInt("id_Offre");
+            result.close();
+            return count_offre;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+       
 	}
 	
 }

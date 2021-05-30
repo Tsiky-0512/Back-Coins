@@ -83,8 +83,8 @@ public class Access {
                     else if(cls.getSimpleName().compareTo("float")==0)
                             value=((java.math.BigDecimal)value).floatValue();
                     */
-                    if(cls.getSimpleName().compareTo("double")==0)
-                            value=new BigDecimal(""+value).doubleValue();
+                    if(cls.getSimpleName().compareTo("long")==0)
+                            value=new BigDecimal(""+value).longValue();
                     m.invoke(rep,value);
             }
     }

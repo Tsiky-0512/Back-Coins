@@ -1,7 +1,13 @@
 package IDea.backend.entities;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -99,6 +105,41 @@ public class Entreprise {
 		}finally {
 			conn.close();
 		}
+	}
+	
+	public Map<String, Double> getCoins(Connection co,long id_entreprise) throws SQLException {
+        PreparedStatement st = null;
+        Map<String, Double> array = new HashMap<String, Double>();
+        String req = "SELECT *  FROM TOTALITE_VOLA_NOM where id_entreprise="+id_entreprise;
+        Double resultat = 0.0;
+        try {
+            st = co.prepareStatement(req);
+            ResultSet result = st.  executeQuery();
+            while(result.next()) array.put(result.getString("nom_entreprise"),result.getDouble("totalite_vola"));
+            result.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return array;
+	}
+	
+	
+	
+	public Map<String, Integer> getParticipants(Connection co,long id_entreprise) throws SQLException {
+        PreparedStatement st = null;
+        Map<String, Integer> array = new HashMap<String, Integer>();
+        String req = "select * from EFFECTIFS_PARTICIPANTS_DETAILS where id_entreprise="+id_entreprise;
+        Double resultat = 0.0;
+        try {
+            st = co.prepareStatement(req);
+            ResultSet result = st.  executeQuery();
+            while(result.next()) array.put(result.getString("nom_entreprise"),result.getInt("effectifs_investisseur"));
+            result.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return array;
+		
 	}
 	
 	
